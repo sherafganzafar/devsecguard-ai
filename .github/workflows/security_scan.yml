@@ -1,0 +1,31 @@
+name: DevSecGuard AI CI/CD Security Scan
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  security_analysis:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+
+    - name: Install Dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install groq python-dotenv
+
+    - name: Run DevSecGuard AI Security Scan
+      env:
+        GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+      run: |
+        python agent.py --file agent.py
