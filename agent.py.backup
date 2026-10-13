@@ -1,0 +1,53 @@
+import os
+from dotenv import load_dotenv
+from openai import OpenAI
+
+# Load environment variables from .env
+load_dotenv()
+
+# Initialize OpenAI client pointing to NVIDIA NIM
+client = OpenAI(
+    base_url="https://integrate.api.nvidia.com/v1",
+    api_key=os.environ.get("NVIDIA_API_KEY")
+)
+
+def analyze_vulnerability(code_snippet):
+    prompt = f"""
+    You are DevSecGuard AI, an expert CI/CD DevSecOps AI Agent.
+    Analyze the following code for security vulnerabilities, hardcoded credentials, or risky patterns:
+    
+    Code:
+    ```python
+    {code_snippet}
+    ```
+    
+    Provide:
+    1. Vulnerability Severity (Low, Medium, High, Critical)
+    2. Explanation of the risk
+    3. Suggested Fix / Patch
+    """
+
+    completion = client.chat.completions.create(
+        model="nvidia/llama-3.1-nemotron-70b-instruct",
+        messages=[{"role": "user", "content": prompt}],
+        temperature=0.2,
+        top_p=0.7,
+        max_tokens=1024,
+    )
+
+    return completion.choices[0].message.content
+
+if __name__ == "__main__":
+    vulnerable_code = """
+    import requests
+
+    def fetch_data():
+        api_key = "sk_live_1234567890abcdef1234567890"
+        response = requests.get(f"https://api.example.com/data?key={api_key}")
+        return response.json()
+    """
+    
+    print("🔍 DevSecGuard AI Scanning Code via NVIDIA NIM...\n")
+    report = analyze_vulnerability(vulnerable_code)
+    print("📋 Security Report:\n")
+    print(report)
