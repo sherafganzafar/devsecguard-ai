@@ -64,15 +64,15 @@ if __name__ == "__main__":
             print(f"❌ Error: File '{args.file}' not found.")
             sys.exit(1)
     else:
-        # Default sample code agar file na di jaye
-        code_to_scan = """
-        import requests
-        def fetch_data():
-            api_key = "sk_live_1234567890abcdef1234567890"
-            response = requests.get(f"https://api.example.com/data?key={api_key}")
-            return response.json()
-        """
-        print("🔍 Scanning Default Sample Code...\n")
+  # Default sample code agar file na di jaye
+    code_to_scan = """
+    import requests
+    def fetch_data():
+        api_key = "your_stripe_key_here"
+        response = requests.get(f"https://api.example.com/data?key={api_key}")
+        return response.json()
+    """
+    print(f"🔍 Scanning Default Sample Code...\n")
 
     report = analyze_vulnerability(code_to_scan)
     print("📋 Security Report:\n")
