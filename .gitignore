@@ -1,2 +1,7 @@
 venv/
+.venv/
 .env
+__pycache__/
+*.pyc
+devsecguard-report.json
+.streamlit/secrets.toml
